@@ -8,6 +8,8 @@ class BoundedPriorityQueue:
 	def enqueue(self, k, v, make_copy=False):
 		if k in [pair[1] for pair in self.pq.queue]:
 			return
+		while v in [pair[0] for pair in self.pq.queue]:
+			v += 1e-4
 		if make_copy:
 			k = copy.deepcopy(k)
 		self.pq.put((v,k))
