@@ -103,14 +103,15 @@ def trace_q_values(dpw, s_current):
     return list(reversed(q_values))
 
 def selectAction(dpw, s, verbose=False):
-	if False & dpw.p.clear_nodes:
+	if dpw.p.clear_nodes:
 		new_dict = saveState(dpw,dpw.s,s)
-		new_dict.clear()
+		dpw.s.clear()
 		dpw.s = new_dict
 
 	d = dpw.p.d
 	starttime_us = time.time()*1e6
 	for i in range(dpw.p.n):
+		#print("i: ",i)
 		R, actions = dpw.f.model.goToState(s)
 		dpw.tracker.empty()
 		dpw.tracker.append_actions(actions)
@@ -138,15 +139,17 @@ def selectAction(dpw, s, verbose=False):
 
 def simulate(dpw, s, d, verbose=False):
 	#print("simulate start")
+	#print("s: ",hash(s))
 	if (d == 0) | dpw.f.model.isEndState(s):
 		#print("simulate end d==0 or terminal")
 		return 0.0
 	if not (s in dpw.s):
 		dpw.s[s] = StateNode()
-		#print("simulate end rollout")
+		#print("rollout")
 		return rollout(dpw,s,d)
 	dpw.s[s].n += 1
 	if len(dpw.s[s].a) <= dpw.p.k*dpw.s[s].n**dpw.p.alpha:
+		#print("N(s,a): ",len(dpw.s[s].a))
 		a = dpw.f.getNextAction(s,dpw.rng)
 		if not (a in dpw.s[s].a):
 			dpw.s[s].a[a] = StateActionNode()

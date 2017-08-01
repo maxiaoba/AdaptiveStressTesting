@@ -11,8 +11,8 @@ class BoundedPriorityQueue:
 		while v in [pair[0] for pair in self.pq.queue]:
 			v += 1e-4
 		if make_copy:
-			k = copy.deepcopy(k)
-		self.pq.put((v,k))
+			ck = copy.deepcopy(k)
+		self.pq.put((v,ck))
 		while self.pq.qsize() > self.N:
 			self.pq.get()
 	def length(self):

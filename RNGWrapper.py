@@ -38,7 +38,7 @@ def hash_uint32(x):
 
 def set_gv_rng_state(a):
 	if type(a) == np.uint32:
-		return np.random.seed([a])
+		return np.random.seed(np.array([a],dtype=np.uint32))
 	else:
 		return np.random.seed(a)
 

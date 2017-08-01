@@ -29,6 +29,8 @@ def stress_test(ast,mcts_params,verbose=True):
 	dpw = MCTSdpw.DPWInit(mcts_params,dpw_model)
 	(mcts_reward,action_seq) = MDP.simulate(dpw.f.model,dpw,MCTSdpw.selectAction,verbose=verbose)
 	results = StressTestResultsInit(mcts_params.top_k)
+	#results = StressTestResultsInit(dpw.top_paths.length())
+	#print(dpw.top_paths.length())
 	k = 0
 	for (r,tr) in dpw.top_paths:
 		results.rewards[k] = r
@@ -42,10 +44,12 @@ def stress_test(ast,mcts_params,verbose=True):
 	return results
 
 def stress_test2(ast,mcts_params,verbose=True):
-	dpw_model = MCTSdpw.DPWModel(ast.transition_model,uniform_getAction(ast.rsg),uniform_getAction(ast.rsg))
+	mcts_params.clear_nodes = False
 	mcts_params.n *= ast.params.max_steps
+
+	dpw_model = MCTSdpw.DPWModel(ast.transition_model,uniform_getAction(ast.rsg),uniform_getAction(ast.rsg))
 	dpw = MCTSdpw.DPWInit(mcts_params,dpw_model)
-	s = dpw.f.mode.getInitialState(dpw.rng)
+	s = dpw.f.model.getInitialState(dpw.rng)
 	MCTSdpw.selectAction(dpw,s,verbose=verbose)
 	results = StressTestResultsInit(mcts_params.top_k)
 	k = 0
